@@ -31,6 +31,5 @@ SE-Labs-PES1UG24CS392/
     ├── 01_Requirements_Table.md           # 5 FRs + 2 NFRs
     ├── 02_UseCase_Diagram.puml            # PlantUML source
     ├── 02_UseCase_Diagram.png             # Rendered diagram
-    ├── 02_UseCase_Diagram.svg             # Vector version
     └── 03_UseCase_Flow_Specification.md   # UC-02 flow spec
 ```
