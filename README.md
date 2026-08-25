@@ -29,13 +29,8 @@ SE-Labs-PES1UG24CS392/
 └── Lab1/
     ├── README.md
     ├── 00_Lab1_Complete_Submission.pdf    # all three deliverables, one PDF
-    ├── 01_Requirements_Table.docx         # deliverable 1 (Word)
-    ├── 01_Requirements_Table.pdf
-    ├── 01_Requirements_Table.md
-    ├── 02_UseCase_Diagram.pdf             # deliverable 2 (PDF)
-    ├── 02_UseCase_Diagram.png
+    ├── 01_Requirements_Table.md           # source
+    ├── 02_UseCase_Diagram.png             # rendered diagram
     ├── 02_UseCase_Diagram.puml            # PlantUML source
-    ├── 03_UseCase_Flow_Specification.docx # deliverable 3 (Word, one page)
-    ├── 03_UseCase_Flow_Specification.pdf  # deliverable 3 (PDF export)
-    └── 03_UseCase_Flow_Specification.md
+    └── 03_UseCase_Flow_Specification.md   # source
 ```

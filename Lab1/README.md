@@ -9,21 +9,18 @@ A municipal transit intelligence platform that ingests GPS feeds from city buses
 
 ---
 
-## Deliverables
+## Submission
 
-**All three deliverables in one file:** [`00_Lab1_Complete_Submission.pdf`](00_Lab1_Complete_Submission.pdf) — cover page, requirements table, use-case diagram and flow specification, 5 pages.
+**[`00_Lab1_Complete_Submission.pdf`](00_Lab1_Complete_Submission.pdf)** — all three deliverables in one 5-page PDF:
 
-They are also committed individually below, in the formats the handout names:
+| Page | Deliverable |
+|---|---|
+| 1 | Cover — SRN, problem statement, contents |
+| 2–3 | **Requirements Table** — 5 FRs (FR-001…FR-005) + 2 NFRs (NFR-001, NFR-002) with Req ID, Type, Description, Priority, Acceptance Criteria and Rationale |
+| 4 | **UML Use-Case Diagram** — 5 actors, 10 use cases (UC-01…UC-10), «include» and «extend» relationships |
+| 5 | **Use-Case Flow Specification** — UC-02 View Live Bus Location & ETA: preconditions, postconditions, main success scenario and one alternate flow |
 
-| # | Deliverable | Required format | File |
-|---|---|---|---|
-| 1 | Requirements Table — 5 FRs + 2 NFRs with Req ID, Type, Description, Priority, Acceptance Criteria, Rationale | Word / Excel | [`01_Requirements_Table.docx`](01_Requirements_Table.docx) · [PDF](01_Requirements_Table.pdf) |
-| 2 | UML Use-Case Diagram — all actors, use cases labelled UC-01…UC-10, «include» and «extend» relationships | PDF | [`02_UseCase_Diagram.pdf`](02_UseCase_Diagram.pdf) |
-| 3 | Use-Case Flow Specification — UC-02, one page, preconditions / postconditions / main success scenario / one alternate flow | Word (p.3) / PDF (p.5) | [`03_UseCase_Flow_Specification.docx`](03_UseCase_Flow_Specification.docx) · [PDF](03_UseCase_Flow_Specification.pdf) |
-
-The handout asks for the flow document as Word on page 3 and as an exported PDF on page 5, so both are included.
-
-Supporting files: [`02_UseCase_Diagram.puml`](02_UseCase_Diagram.puml) (PlantUML source), [`02_UseCase_Diagram.png`](02_UseCase_Diagram.png) (README preview), and Markdown copies of both documents so they render directly on GitHub.
+Source files: [`01_Requirements_Table.md`](01_Requirements_Table.md), [`03_UseCase_Flow_Specification.md`](03_UseCase_Flow_Specification.md) (render directly on GitHub) and [`02_UseCase_Diagram.puml`](02_UseCase_Diagram.puml) (PlantUML).
 
 ---
 
@@ -65,11 +62,14 @@ Supporting files: [`02_UseCase_Diagram.puml`](02_UseCase_Diagram.puml) (PlantUML
 - UC-04 Subscribe to Arrival Alert ⇢ UC-02, at extension point *ETA displayed* — only if the commuter opts in
 - UC-06 Dispatch Relief Bus ⇢ UC-05, at extension point *Exception flagged* — only when a bus is delayed beyond threshold or holding a *Full* crowding band
 
+### Traceability
+
+FR-001 → UC-09, UC-07 · FR-002 → UC-03, UC-08 · FR-003 → UC-01, UC-02 · FR-004 → UC-04 · FR-005 → UC-05, UC-06 · NFR-001 constrains UC-09 and UC-07 · NFR-002 constrains UC-10 and all data paths.
+
 ---
 
 ## Regenerating the diagram
 
 ```bash
-java -jar plantuml.jar -tpng 02_UseCase_Diagram.puml   # preview
-java -jar plantuml.jar -tsvg 02_UseCase_Diagram.puml   # then convert to PDF
+java -jar plantuml.jar -tpng 02_UseCase_Diagram.puml
 ```
