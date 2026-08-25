@@ -3,12 +3,7 @@
 **PES University — Dept. of CSE**
 **Problem Statement #24:** Public Bus Live Tracking & Crowding Estimator
 **Primary Domain:** Smart Cities, Transport & Logistics
-**Actors:** Commuter, Fleet Controller
 **SRN:** PES1UG24CS392
-
----
-
-## Problem Context
 
 A municipal transit intelligence platform that ingests GPS feeds from city buses, estimates arrival times (ETA) at downstream stops, and computes passenger crowding levels from ticketing sensors.
 
@@ -16,49 +11,59 @@ A municipal transit intelligence platform that ingests GPS feeds from city buses
 
 ## Deliverables
 
-| # | Deliverable | File |
-|---|---|---|
-| 1 | Complete Requirements Table — 5 FRs + 2 NFRs with ID, Type, Description, Priority, Acceptance Criteria, Rationale | [`01_Requirements_Table.md`](01_Requirements_Table.md) |
-| 2 | UML Use-Case Diagram — all actors, primary use cases, «include» and «extend» relationships | [`02_UseCase_Diagram.png`](02_UseCase_Diagram.png) · source: [`02_UseCase_Diagram.puml`](02_UseCase_Diagram.puml) |
-| 3 | Use-Case Flow Specification — UC-02 *View Live Bus Location & ETA*, with preconditions, postconditions, main success scenario and one alternate flow | [`03_UseCase_Flow_Specification.md`](03_UseCase_Flow_Specification.md) |
+| # | Deliverable | Required format | File |
+|---|---|---|---|
+| 1 | Requirements Table — 5 FRs + 2 NFRs with Req ID, Type, Description, Priority, Acceptance Criteria, Rationale | Word / Excel | [`01_Requirements_Table.docx`](01_Requirements_Table.docx) |
+| 2 | UML Use-Case Diagram — all actors, use cases labelled UC-01…UC-10, «include» and «extend» relationships | PDF | [`02_UseCase_Diagram.pdf`](02_UseCase_Diagram.pdf) |
+| 3 | Use-Case Flow Specification — UC-02, one page, preconditions / postconditions / main success scenario / one alternate flow | Word, one page | [`03_UseCase_Flow_Specification.docx`](03_UseCase_Flow_Specification.docx) |
+
+Supporting files: [`02_UseCase_Diagram.puml`](02_UseCase_Diagram.puml) (PlantUML source), [`02_UseCase_Diagram.png`](02_UseCase_Diagram.png) (preview), and Markdown copies of the two documents.
 
 ---
 
 ## Use-Case Diagram
 
-![Use-Case Diagram — Public Bus Live Tracking & Crowding Estimator](02_UseCase_Diagram.png)
+![Use-Case Diagram](02_UseCase_Diagram.png)
 
-### Actors modelled
+### Actors
 
 | Actor | Kind | Role |
 |---|---|---|
-| Commuter | Primary (human) | Searches routes/stops, views live ETA and crowding, subscribes to arrival alerts |
-| Fleet Controller | Primary (human) | Monitors the fleet dashboard, dispatches relief buses |
-| Onboard GPS Unit | Secondary (system) | Supplies the 5-second position telemetry stream |
-| Ticketing / APC Sensor | Secondary (system) | Supplies boarding/alighting counts for crowding estimation |
-| Push Notification Service | Secondary (system) | Delivers arrival alerts to the commuter's device |
+| Commuter | Primary | Searches routes/stops, views live ETA and crowding, subscribes to arrival alerts |
+| Fleet Controller | Primary | Monitors the fleet dashboard, dispatches relief buses |
+| Onboard GPS Unit | Secondary | Supplies the 5-second position telemetry stream |
+| Ticketing / APC Sensor | Secondary | Supplies boarding/alighting counts for crowding estimation |
+| Push Notification Service | Secondary | Delivers arrival alerts to the commuter's device |
+
+### Use Cases
+
+| ID | Use Case | ID | Use Case |
+|---|---|---|---|
+| UC-01 | Search Route / Stop | UC-06 | Dispatch Relief Bus |
+| UC-02 | View Live Bus Location & ETA | UC-07 | Compute ETA |
+| UC-03 | View Crowding Level | UC-08 | Estimate Crowding Level |
+| UC-04 | Subscribe to Arrival Alert | UC-09 | Ingest GPS Telemetry |
+| UC-05 | Monitor Fleet Dashboard | UC-10 | Authenticate Controller |
 
 ### Relationships
 
-**«include»** (base use case always performs the included one)
+**«include»** — the base use case always performs the included one:
 
-- `View Live Bus Location & ETA` → `Compute ETA`
-- `View Live Bus Location & ETA` → `View Crowding Level`
-- `Monitor Fleet Dashboard` → `Authenticate Controller`
-- `Compute ETA` → `Ingest GPS Telemetry`
-- `View Crowding Level` → `Estimate Crowding Level`
+- UC-02 → UC-01 Search Route / Stop
+- UC-02 → UC-07 Compute ETA
+- UC-02 → UC-03 View Crowding Level
+- UC-05 → UC-10 Authenticate Controller
 
-**«extend»** (extending use case runs conditionally on the base)
+**«extend»** — the extending use case runs conditionally at the base's extension point:
 
-- `Subscribe to Arrival Alert` ⇢ `View Live Bus Location & ETA` — optional, while viewing a bus's live ETA
-- `Dispatch Relief Bus` ⇢ `Monitor Fleet Dashboard` — only when the dashboard flags a delayed or overcrowded bus
+- UC-04 Subscribe to Arrival Alert ⇢ UC-02, at extension point *ETA displayed* — only if the commuter opts in
+- UC-06 Dispatch Relief Bus ⇢ UC-05, at extension point *Exception flagged* — only when a bus is delayed beyond threshold or holding a *Full* crowding band
 
 ---
 
 ## Regenerating the diagram
 
-The diagram is authored in PlantUML. To re-render after editing the source:
-
 ```bash
-java -jar plantuml.jar -tpng 02_UseCase_Diagram.puml
+java -jar plantuml.jar -tpng 02_UseCase_Diagram.puml   # preview
+java -jar plantuml.jar -tsvg 02_UseCase_Diagram.puml   # then convert to PDF
 ```

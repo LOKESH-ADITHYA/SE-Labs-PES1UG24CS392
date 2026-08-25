@@ -27,9 +27,12 @@ Software Engineering lab deliverables — **PES University, Dept. of CSE**
 SE-Labs-PES1UG24CS392/
 ├── README.md
 └── Lab1/
-    ├── README.md                          # Lab 1 overview
-    ├── 01_Requirements_Table.md           # 5 FRs + 2 NFRs
+    ├── README.md
+    ├── 01_Requirements_Table.docx         # deliverable 1 (Word)
+    ├── 01_Requirements_Table.md
+    ├── 02_UseCase_Diagram.pdf             # deliverable 2 (PDF)
+    ├── 02_UseCase_Diagram.png
     ├── 02_UseCase_Diagram.puml            # PlantUML source
-    ├── 02_UseCase_Diagram.png             # Rendered diagram
-    └── 03_UseCase_Flow_Specification.md   # UC-02 flow spec
+    ├── 03_UseCase_Flow_Specification.docx # deliverable 3 (Word, one page)
+    └── 03_UseCase_Flow_Specification.md
 ```

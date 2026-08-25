@@ -12,7 +12,7 @@ skinparam defaultFontSize 13
 skinparam ArrowColor #37474F
 skinparam ArrowFontSize 12
 skinparam nodesep 22
-skinparam ranksep 60
+skinparam ranksep 65
 skinparam actor {
   BorderColor #1A4C8B
   BackgroundColor #E8F0FA
@@ -29,62 +29,49 @@ skinparam rectangle {
 }
 left to right direction
 
-' ---------- Primary (human) actors : left ----------
+' ---------- All actors, drawn on the left ----------
+' Primary (human) actors
 actor "Commuter"         as CM
 actor "Fleet Controller" as FC
-
-rectangle "Public Bus Live Tracking & Crowding Estimator" {
-
-  usecase "Search Route / Stop"           as UC1
-  usecase "View Live Bus\nLocation & ETA" as UC2
-  usecase "View Crowding Level"           as UC3
-  usecase "Subscribe to\nArrival Alert"   as UC4
-  usecase "Monitor Fleet\nDashboard"      as UC5
-  usecase "Dispatch Relief Bus"           as UC6
-
-  usecase "Compute ETA"             as UC8
-  usecase "Authenticate Controller" as UC10
-  usecase "Ingest GPS Telemetry"    as UC7
-  usecase "Estimate Crowding Level" as UC9
-}
-
-' ---------- Secondary / system actors : right ----------
+' Secondary (system / device) actors
 actor "Onboard GPS Unit"           as GPS
 actor "Ticketing / APC Sensor"     as TKT
 actor "Push Notification\nService" as PNS
 
-' ---------- Actor associations ----------
-CM --> UC1
-CM --> UC2
-CM --> UC4
-FC --> UC5
-FC --> UC6
+CM  -[hidden]down- FC
+FC  -[hidden]down- GPS
+GPS -[hidden]down- TKT
+TKT -[hidden]down- PNS
 
-UC7 --> GPS
-UC9 --> TKT
-UC4 --> PNS
+rectangle "Public Bus Live Tracking & Crowding Estimator" {
+
+  usecase "**UC-01**\nSearch Route / Stop"        as UC01
+  usecase "**UC-02**\nView Live Bus\nLocation & ETA\n--\n//extension points//\nETA displayed" as UC02
+  usecase "**UC-03**\nView Crowding Level"        as UC03
+  usecase "**UC-04**\nSubscribe to\nArrival Alert" as UC04
+  usecase "**UC-05**\nMonitor Fleet\nDashboard\n--\n//extension points//\nException flagged" as UC05
+  usecase "**UC-06**\nDispatch Relief Bus"        as UC06
+  usecase "**UC-07**\nCompute ETA"                as UC07
+  usecase "**UC-08**\nEstimate\nCrowding Level"   as UC08
+  usecase "**UC-09**\nIngest GPS\nTelemetry"      as UC09
+  usecase "**UC-10**\nAuthenticate\nController"   as UC10
+}
+
+' ---------- Associations ----------
+CM  --> UC02
+FC  --> UC05
+GPS --> UC09
+TKT --> UC08
+PNS --> UC04
 
 ' ---------- <<include>> relationships ----------
-UC2  ..> UC8  : <<include>>
-UC2  ..> UC3  : <<include>>
-UC5  ..> UC10 : <<include>>
-UC8  ..> UC7  : <<include>>
-UC3  ..> UC9  : <<include>>
+UC02 ..> UC01 : <<include>>
+UC02 ..> UC07 : <<include>>
+UC02 ..> UC03 : <<include>>
+UC05 ..> UC10 : <<include>>
 
 ' ---------- <<extend>> relationships ----------
-UC4 ..> UC2 : <<extend>>
-UC6 ..> UC5 : <<extend>>
-
-legend right
-  |= Notation |= Meaning |
-  | <&arrow-right> solid | actor–use-case association |
-  | ..> <<include>> | base use case **always** performs the included one |
-  | ..> <<extend>> | extending use case runs **conditionally** on the base |
-  ----
-  **Key <<extend>> conditions**
-  //Subscribe to Arrival Alert// — optional, while viewing a bus's live ETA.
-  //Dispatch Relief Bus// — only when the dashboard flags a delayed
-  or overcrowded bus.
-endlegend
+UC04 ..> UC02 : <<extend>>\n(ETA displayed)
+UC06 ..> UC05 : <<extend>>\n(Exception flagged)
 
 @enduml
