@@ -1,0 +1,154 @@
+==================== main.py ====================
+
+from game import SlidingPuzzle
+
+if __name__ == "__main__":
+    SlidingPuzzle().run()
+
+
+==================== game.py ====================
+
+import time
+from puzzle import Puzzle
+
+SIZES = (3, 4, 5)
+
+
+class SlidingPuzzle:
+    def __init__(self, size=None):
+        # Session values: kept across every board created in this run.
+        self.games_started = 0
+        self.puzzle = None
+        if size is not None:
+            self.new_game(size)
+
+    def new_game(self, size):
+        # Per-game values are always reset together with the board, so moves
+        # and time stay consistent no matter which size is chosen.
+        self.size = size
+        self.puzzle = Puzzle(size)
+        self.moves = 0
+        self.started = time.monotonic()
+        self.finished_at = None  # set once the puzzle is solved; freezes the timer
+        self.games_started += 1
+
+    @property
+    def finished(self):
+        return self.finished_at is not None
+
+    def elapsed(self):
+        end = self.finished_at if self.finished else time.monotonic()
+        return int(end - self.started)
+
+    def display(self):
+        print()
+        for row in self.puzzle.board:
+            print(" ".join(f"{x or ' ':>2}" for x in row))
+        print(f"Size: {self.size}x{self.size}  Moves: {self.moves}  Time: {self.elapsed()} s")
+
+    def slide(self, key):
+        # Once solved, the board, move count and timer are locked.
+        if self.finished:
+            print("The puzzle is already solved.")
+            return
+        r, c = self.puzzle.blank_pos()
+        if not self.puzzle.move(key):
+            # Nothing moved: no count, no success message.
+            print("That move is not possible.")
+            return
+        self.moves += 1
+        print(f"Slid tile {self.puzzle.board[r][c]} into the blank.")
+        if self.puzzle.solved():
+            self.finished_at = time.monotonic()
+
+    def choose_size(self):
+        while True:
+            choice = input("Choose a size (3, 4 or 5): ").strip()
+            if choice.isdigit() and int(choice) in SIZES:
+                return int(choice)
+            print("Please enter 3, 4 or 5.")
+
+    def run(self):
+        print("Sliding Puzzle — W/A/S/D moves the tile into the blank. Q quits.")
+        print("Type 3, 4 or 5 at any time to start a new board of that size.")
+        if self.puzzle is None:
+            self.new_game(self.choose_size())
+        while True:
+            self.display()
+            if self.finished:
+                print(f"Solved {self.size}x{self.size} in {self.moves} moves and {self.elapsed()} s!")
+                print(f"Boards played this session: {self.games_started}")
+                return
+            key = input("> ").strip().lower()
+            if key == "q":
+                print(f"Boards played this session: {self.games_started}")
+                return
+            if key.isdigit() and int(key) in SIZES:
+                self.new_game(int(key))
+                continue
+            if key not in ("w", "a", "s", "d"):
+                print("Use W/A/S/D.")
+                continue
+            self.slide(key)
+
+
+==================== puzzle.py ====================
+
+import random
+
+OPPOSITE = {"w": "s", "s": "w", "a": "d", "d": "a"}
+
+
+class Puzzle:
+    def __init__(self, size=4):
+        self.size = size
+        self.board = self.make_board()
+        self.scramble()
+
+    def make_board(self):
+        # Start from the solved arrangement; scramble() then applies legal moves,
+        # so every generated board is reachable from (and solvable back to) it.
+        tiles = list(range(1, self.size * self.size)) + [0]
+        return [tiles[r * self.size:(r + 1) * self.size] for r in range(self.size)]
+
+    def scramble(self, steps=None):
+        steps = steps or self.size * self.size * 25
+        while True:
+            last = None
+            for _ in range(steps):
+                # Pick a random legal move, skipping the one that would undo the last.
+                options = [k for k in "wasd" if k != OPPOSITE.get(last)]
+                random.shuffle(options)
+                last = next(k for k in options if self.move(k))
+            if not self.solved():
+                return
+
+    def blank_pos(self):
+        for r in range(self.size):
+            for c in range(self.size):
+                if self.board[r][c] == 0:
+                    return r, c
+
+    def move(self, direction):
+        offsets = {"w": (-1, 0), "s": (1, 0), "a": (0, -1), "d": (0, 1)}
+        if direction not in offsets:
+            return False
+        r, c = self.blank_pos()
+        dr, dc = offsets[direction]
+        nr, nc = r + dr, c + dc
+        if not (0 <= nr < self.size and 0 <= nc < self.size):
+            return False
+        self.board[r][c], self.board[nr][nc] = self.board[nr][nc], self.board[r][c]
+        return True
+
+    def solved(self):
+        return sum(self.board, []) == list(range(1, self.size * self.size)) + [0]
+
+
+==================== requirements.txt ====================
+
+# Standard-library-only scenario.
+# No third-party packages are required.
+# Recommended Python version: 3.9+
+
+
