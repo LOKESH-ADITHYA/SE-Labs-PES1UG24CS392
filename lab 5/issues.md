@@ -103,9 +103,9 @@ re-running all three tools and re-running the program before committing.
 
 | Commit | Scope | Effect |
 |--------|-------|--------|
-| `b837563` | `fix(security)` — Bandit findings #1–4 | Bandit 4 issues (1 High, 1 Medium, 2 Low) → **0** |
-| `b03f934` | `refactor(quality)` — Pylint findings #5–9, plus logic defects #10–12 | Pylint **4.81/10 → 10.00/10** |
-| `0ac2b64` | `style(pep8)` — Flake8 findings #13–16 | Flake8 4 issues → **0** |
+| `ad97f2f` | `fix(security)` — Bandit findings #1–4 | Bandit 4 issues (1 High, 1 Medium, 2 Low) → **0** |
+| `9225a39` | `refactor(quality)` — Pylint findings #5–9, plus logic defects #10–12 | Pylint **4.81/10 → 10.00/10** |
+| `64c97f5` | `style(pep8)` — Flake8 findings #13–16 | Flake8 4 issues → **0** |
 
 The commits are deliberately ordered security → quality → style, so the
 highest-severity change is the smallest and most reviewable diff, and the
