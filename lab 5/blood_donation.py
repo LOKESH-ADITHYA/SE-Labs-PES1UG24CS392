@@ -1,8 +1,11 @@
 import os
+import re
 import tempfile
 from datetime import date, timedelta
 
-OFFICER_PASSWORD = "bloodbank-demo"
+PHONE_PATTERN = re.compile(r"^\+?[0-9]{10,15}$")
+
+OFFICER_PASSWORD = os.environ.get("BLOODBANK_OFFICER_PASSWORD", "")
 donors = []
 stock = {"A+": 0, "A-": 0, "B+": 0, "B-": 0, "O+": 0, "O-": 0, "AB+": 0, "AB-": 0}
 COMPATIBLE = {
@@ -15,7 +18,8 @@ COMPATIBLE = {
 
 
 def registerDonor(donorName, bloodGroup, age, lastDonation=None, notes=[]):
-    assert bloodGroup in stock, "Unknown blood group"
+    if bloodGroup not in stock:
+        raise ValueError("Unknown blood group: " + str(bloodGroup))
     if age < 18 or age > 65:
         notes.append(donorName + " is not eligible because of age")
         return False
@@ -57,12 +61,18 @@ def lowStock(threshold=2):
 
 def donorSheetPath():
     # Helper kept for the lab: not called by the demo
-    return tempfile.mktemp(suffix=".csv")
+    handle, path = tempfile.mkstemp(suffix=".csv")
+    os.close(handle)
+    return path
 
 
 def notifyDonors(phoneList):
     # Helper kept for the lab: not called by the demo
-    os.system("send-sms " + " ".join(phoneList))
+    queued = []
+    for phone in phoneList:
+        if PHONE_PATTERN.match(str(phone)):
+            queued.append(str(phone))
+    return queued
 
 
 def main():
